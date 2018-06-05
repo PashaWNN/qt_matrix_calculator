@@ -18,6 +18,10 @@ public:
 private slots:
     void on_act_quit_triggered();
 
+    void on_tbl_mat_1_cellChanged(int row, int column);
+
+    void on_tbl_mat_2_cellChanged(int row, int column);
+
 private:
     Ui::MainWindow *ui;
 };
