@@ -22,6 +22,16 @@ private slots:
 
     void on_tbl_mat_2_cellChanged(int row, int column);
 
+    void on_btn_trans_clicked();
+
+    void on_btn_sum_clicked();
+
+    void on_btn_multiply_clicked();
+
+    void on_btn_sub_clicked();
+
+    void on_btn_pow_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

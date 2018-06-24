@@ -5,7 +5,7 @@
 
 const int OP_SUM = 1;
 const int OP_MULTIPLY = 2;
-const int OP_DIVIDE = 3;
+//const int OP_DIVIDE = 3;
 const int OP_SUB = 4;
 const int OP_POW = 5;
 const int OP_TRANS = 6;
@@ -28,8 +28,8 @@ void MainWindow::on_act_quit_triggered()
     MainWindow::close();
 }
 
-void do_binary_operation(QTableWidget* m1, QTableWidget* m2, int operation, QTableWidget* result) {
-    Matrix matrix1(m1->rowCount(), m2->columnCount());
+void do_operation(QTableWidget* m1, QTableWidget* m2, int operation, QTableWidget* result) {
+    Matrix matrix1(m1->rowCount() - 1, m1->columnCount() - 1); // Because last row and column is always empty
     for (int i = 0; i < matrix1.getN(); i++) {
         for (int j = 0; j < matrix1.getM(); j++) {
             QTableWidgetItem* elem = m1->item(i, j);
@@ -38,7 +38,7 @@ void do_binary_operation(QTableWidget* m1, QTableWidget* m2, int operation, QTab
             } else throw "Не полностью заполнена матрица 1!";
         }
     }
-    Matrix matrix2(m2->rowCount(), m2->columnCount());
+    Matrix matrix2(m2->rowCount() - 1, m2->columnCount() - 1);
     for (int i = 0; i < matrix2.getN(); i++) {
         for (int j = 0; j < matrix2.getM(); j++) {
             QTableWidgetItem* elem = m2->item(i, j);
@@ -47,6 +47,30 @@ void do_binary_operation(QTableWidget* m1, QTableWidget* m2, int operation, QTab
             } else throw "Не полностью заполнена матрица 2!";
         }
     }
+    Matrix res;
+    switch (operation) {
+       case OP_MULTIPLY:
+        res = Matrix(matrix1 * matrix2);
+        break;
+       case OP_POW:
+        break;
+       case OP_SUB:
+        break;
+       case OP_SUM:
+        res = Matrix(matrix1 + matrix2);
+        break;
+       case OP_TRANS:
+        res = Matrix(matrix1.transpose());
+        break;
+    }
+    result->setColumnCount(res.getN());
+    result->setRowCount(res.getM());
+    for (int i = 0; i < res.getN(); i++) {
+        for (int j = 0; j < res.getM(); j++) {
+            result->setItem(i, j, new QTableWidgetItem(QString::number(res.getElem(i, j))));
+        }
+    }
+
 }
 
 void refresh_table(QTableWidget* tbl, int row, int col) {
@@ -112,3 +136,32 @@ void MainWindow::on_tbl_mat_2_cellChanged(int row, int column)
 }
 
 
+
+void MainWindow::on_btn_trans_clicked()
+{
+    try {
+    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_TRANS, ui->tbl_result);
+    } catch (const char* e) {
+        QMessageBox::warning(this, "Ошибка при транспонировании матрицы", e);
+    }
+}
+
+void MainWindow::on_btn_sum_clicked()
+{
+    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_SUM, ui->tbl_result);
+}
+
+void MainWindow::on_btn_multiply_clicked()
+{
+    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_MULTIPLY, ui->tbl_result);
+}
+
+void MainWindow::on_btn_sub_clicked()
+{
+    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_SUB, ui->tbl_result);
+}
+
+void MainWindow::on_btn_pow_clicked()
+{
+    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_POW, ui->tbl_result);
+}

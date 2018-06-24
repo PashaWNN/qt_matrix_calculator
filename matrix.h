@@ -9,18 +9,23 @@ private:
     QVector<QVector<double>> data;
 public:
     Matrix() { // Default constructor
-        throw "Not implemented";
+        //throw "Not implemented";
     }
     Matrix(int N, int M);
-
-    int getN() {
+    Matrix(const Matrix &mat);
+    int getN() const{
         return n;
     }
-    int getM() {
+    int getM() const{
         return m;
     }
     void setElem(int x, int y, double value);
-    double getElem(int x, int y);
+    double getElem(int x, int y) const;
+    const Matrix transpose();
+    const Matrix operator + (Matrix &m2);
+    const Matrix operator * (Matrix &m2);
+    const Matrix operator - (Matrix &m2);
+    const Matrix operator ^ (int power);
 
 };
 
