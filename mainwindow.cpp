@@ -53,8 +53,10 @@ void do_operation(QTableWidget* m1, QTableWidget* m2, int operation, QTableWidge
         res = Matrix(matrix1 * matrix2);
         break;
        case OP_POW:
+        //res = Matrix(matrix1 ^ matrix2);
         break;
        case OP_SUB:
+        res = Matrix(matrix1 - matrix2);
         break;
        case OP_SUM:
         res = Matrix(matrix1 + matrix2);
@@ -148,20 +150,36 @@ void MainWindow::on_btn_trans_clicked()
 
 void MainWindow::on_btn_sum_clicked()
 {
-    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_SUM, ui->tbl_result);
+    try {
+        do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_SUM, ui->tbl_result);
+    } catch (const char* e) {
+        QMessageBox::warning(this, "Ошибка при сложении матриц", e);
+    }
 }
 
 void MainWindow::on_btn_multiply_clicked()
 {
-    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_MULTIPLY, ui->tbl_result);
+    try {
+        do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_MULTIPLY, ui->tbl_result);
+    } catch (const char* e) {
+        QMessageBox::warning(this, "Ошибка при умножении матриц", e);
+    }
 }
 
 void MainWindow::on_btn_sub_clicked()
 {
-    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_SUB, ui->tbl_result);
+    try {
+        do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_SUB, ui->tbl_result);
+    } catch (const char* e) {
+        QMessageBox::warning(this, "Ошибка при вычитании матриц", e);
+    }
 }
 
 void MainWindow::on_btn_pow_clicked()
 {
-    do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_POW, ui->tbl_result);
+    try {
+        do_operation(ui->tbl_mat_1, ui->tbl_mat_2, OP_POW, ui->tbl_result);
+    } catch (const char* e) {
+        QMessageBox::warning(this, "Ошибка при возведении матрицы в степень", e);
+    }
 }
