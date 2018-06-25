@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "QDebug"
 #include "QMessageBox"
+#include "QClipboard"
 
 const int OP_SUM = 1;
 const int OP_MULTIPLY = 2;
@@ -53,7 +54,9 @@ void do_operation(QTableWidget* m1, QTableWidget* m2, int operation, QTableWidge
         res = Matrix(matrix1 * matrix2);
         break;
        case OP_POW:
-        //res = Matrix(matrix1 ^ matrix2);
+        if (matrix2.getN() != 1 || matrix2.getM() != 1) {
+            throw "Чтобы возвести матрицу 1 в степень, нужно указать степень в виде матрицы 2 1х1";
+        } else res = Matrix(matrix1 ^ (int)matrix2.getElem(0, 0));
         break;
        case OP_SUB:
         res = Matrix(matrix1 - matrix2);
@@ -182,4 +185,67 @@ void MainWindow::on_btn_pow_clicked()
     } catch (const char* e) {
         QMessageBox::warning(this, "Ошибка при возведении матрицы в степень", e);
     }
+}
+
+void copy_matrix(QTableWidget* tbl)
+{
+    QClipboard* cb = QApplication::clipboard();
+    QString contents;
+    for (int i = 0; i < tbl->rowCount() - 1; i++) {
+        for (int j = 0; j < tbl->columnCount() - 1; j++) {
+            QTableWidgetItem* elem = tbl->item(i, j);
+            if (elem && !elem->text().isEmpty()) {
+                contents += elem->text() + " ";
+            }
+        }
+        contents += "\n";
+    }
+    cb->setText(contents);
+}
+
+void paste_matrix(QTableWidget* tbl)
+{
+    QString contents = QApplication::clipboard()->text();
+    tbl->clear();
+    QStringList lines = contents.split("\n", QString::SkipEmptyParts);
+    int line = 0;
+    tbl->setRowCount(lines.length() + 1);
+    tbl->setColumnCount(1);
+    for (auto i: lines) {
+        QStringList columns = i.split(" ", QString::SkipEmptyParts);
+            if (tbl->columnCount() < columns.length() + 1) {
+                tbl->setColumnCount(columns.length() + 1);
+            }
+                for (int j = 0; j < columns.length(); j++) {
+                    tbl->setItem(line, j, new QTableWidgetItem(columns[j]));
+                    qDebug() << "Inserting <<" + columns[j] + ">> at " + QString::number(line) + ", " + QString::number(j);
+                }
+            line++;
+        }
+
+}
+
+void MainWindow::on_btn_m1copy_clicked()
+{
+    copy_matrix(ui->tbl_mat_1);
+}
+
+void MainWindow::on_btn_m1paste_clicked()
+{
+    paste_matrix(ui->tbl_mat_1);
+}
+
+void MainWindow::on_btn_m2copy_clicked()
+{
+    copy_matrix(ui->tbl_mat_2);
+}
+
+void MainWindow::on_btn_m2paste_clicked()
+{
+    paste_matrix(ui->tbl_mat_2);
+}
+
+void MainWindow::on_btn_rcopy_clicked()
+{
+    copy_matrix(ui->tbl_result);
 }

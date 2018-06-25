@@ -32,6 +32,16 @@ private slots:
 
     void on_btn_pow_clicked();
 
+    void on_btn_m1copy_clicked();
+
+    void on_btn_m1paste_clicked();
+
+    void on_btn_m2copy_clicked();
+
+    void on_btn_m2paste_clicked();
+
+    void on_btn_rcopy_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
